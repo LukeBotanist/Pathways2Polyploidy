@@ -1,0 +1,248 @@
+---
+title: "Population_Phylogenetic_Analysis"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+    theme: united
+    keep_md: true
+  github_document:
+    toc: yes
+    toc_depth: '3'
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(adegenet)
+library(ape)
+library(ggpubr)
+library(gridExtra)
+library(grid)
+library(ggrepel)
+library(ggtree)
+library(patchwork)
+library(phangorn)
+library(phytools)
+library(purrr)
+library(readxl)
+library(tanggle)
+library(tidytree)
+library(tidyverse)
+library(vcfR)
+
+source("src/source.R")
+```
+
+### PCA of ingroup samples
+
+For the principal component analysis, we only use the 36 samples of A. tridentata subspecies (i.e. only ingroup). 
+
+```{r, read vcf}
+
+ingroup <- read.vcfR("data/vcf/ingrpR80miss15maf003DP5.recode.vcf") # read vcf file
+```
+
+We can confirm that our samples contains the ingroup samples (`r dim(ingroup@gt)[2]`) as well as `r dim(ingroup@gt)[1]` SNPs. The column count shown above equals the (`r dim(ingroup@gt)[2]`) sample columns + `r dim(ingroup@fix)[2]` fix columns (i.e. CHROM, POS, etc.)
+
+We can then read the data passport data (i.e. Table S1), recode (factor) and reorder (levels) the species/subspecies codes. 
+
+```{r, recode metadata}
+sample_info <- read_excel("data/tables/Supplementary_Table.xlsx", sheet=2) #read sample info file; sheet2==passport data
+
+#recode chr to fct and reorder levels for plotting 
+sample_info <- sample_info %>%
+  mutate(spp_ssp_code_PCA=factor(spp_ssp_code_PCA, 
+                                 levels=c("tri","vas","wyo", "unassigned")), 
+         spp_ssp_code_phylogeny=factor(spp_ssp_code_phylogeny, 
+                                       levels=c("tri","vas","wyo", "arb", "nov", "rig", "trip")))
+```
+
+Once this tidying step is complete, we can convert the vcf to genind which contains individual genotypes and is stored in a matrix. We can use this and impute missing values by the mean of the allele frequencies, which subsequently serves as input for the PCA.
+
+```{r, calculate pca}
+x <- vcfR2genind(ingroup) # convert vcf to genind format
+x.tab <- tab(x, freq=TRUE, NA.method="mean") #access allele frequencies
+
+x.pca <- dudi.pca(x.tab,
+                  scannf = F, #do not display scree plot
+                  scale = T, #norm the column vectors for the row.w weighting
+                  nf = 5, #number of kept axes
+                  center = T)#centering by the mean
+pca_data <- x.pca$li #extract the row coordinates i.e. the principal components
+ex_var <- x.pca$eig/sum(x.pca$eig)*100 #calcualte explained variance in percent
+
+```
+
+Finally, we can plot and customize the PCA. 
+
+```{r, plot pca, fig.height=8, fig.width=8}
+
+pca_data <- pca_data %>%
+  rownames_to_column(var="Sample_ID")
+
+#join sample information
+pca.data.comb <- left_join(pca_data, sample_info, by="Sample_ID")
+
+PC12 <- ggplot(pca.data.comb, aes(x=Axis1, 
+                                  y=Axis2, 
+                                  col=spp_ssp_code_PCA, 
+                                  pch=as.factor(ploidy_level)))+
+  geom_point(size=4, stroke=2)+
+  scale_color_manual(values=cols.list.ingrp3tax, 
+                     labels=labs.list.ingrp3tax, 
+                     name="Subspecies") +
+  scale_shape_manual(values=c(1,13,15,19), 
+                     na.value = 16, 
+                     name="Ploidy", 
+                     labels=labs.list.ploidy)+
+  #subset samples for hightlighted plotting
+  geom_text_repel(data = pca.data.comb %>% 
+                    mutate(label = ifelse(Sample_ID %in%  c("WAT1-4", "IDT2-5", "O1_01", "O1_01_rep"),
+                                          Sample_ID, "")),
+                  aes(label = label), 
+                  box.padding = 1, nudge_x = -0.5, nudge_y = 0.5,
+                  show.legend = FALSE, max.overlaps = 15, size=4)+
+  labs(x=paste0("PC1 (", round(ex_var[1],2),"%)"),
+       y=paste0("PC2 (", round(ex_var[2],2), "%)"))+
+  coord_equal()+
+  theme_classic(base_size = 15)
+
+print(PC12)
+ggsave(plot=PC12, "results/figures/PC12.pdf", device = "pdf", height = 6, width=8)
+
+```
+
+
+### Phylogenetics
+
+To conduct a phylogenetic analysis and infer whether some of the related Artemisia species contributed to polyploid formation, we include 4 outgroup taxa (2 samples each). 
+
+```{r , read_fasta, echo=FALSE}
+artr <- phangorn::read.phyDat(file="data/fasta_phy/outgrpR80miss15maf003DP5.recode.min4.fasta", format = "fasta")
+nsites <- length(attributes(artr)$index)
+nsamples <- length(attributes(artr)$names)
+```
+
+This fasta file contains `r nsamples` samples, and `r nsites` SNPs.
+
+#### Splitnet
+
+Among the first things to calculate is a phylogenetic network, that, in short, incorporate reticulations into the network at
+points where the data have conflicting signals. 
+To construct a phylogenetic network, we utilize the function dist.ml of phangorn to calculate pairwise distances and then construct the network using neighbotNet, that implements the method of Bryant and Moulton (2004). For plotting, we can use the `tanggle` package by Schliep et al. 2018.
+
+```{r ,calculate splitnet, echo=T, fig.height=8, fig.width=12}
+dm <- dist.ml(artr)
+sb.nnet <- neighborNet(dm)
+splitnet <- ggsplitnet(sb.nnet)
+splitnet$data <- left_join(splitnet$data, sample_info, by = c("label"="Sample_ID"))
+
+splitnet_plot <- splitnet +
+  geom_tippoint(aes(color=spp_ssp_code_phylogeny, 
+                    pch=as.factor(ploidy_level)), size=4, stroke=2)+
+  scale_color_manual(values=cols.list.outgrp,
+                     labels=labels.col.outgrp) +
+  scale_shape_manual(values=shp.list.ploidy)+
+  ggexpand(.1, direction=-1)+
+  labs(shape="Ploidy", col="Species/Subspecies")+
+  theme_void(base_size=15)
+
+ggsave(plot=splitnet_plot, "results/figures/Splitnet.pdf", device = "pdf", height = 6, width=8)
+
+```
+
+### Maximum Likelihood Analysis
+#### Model Testing
+
+To construct a maximum likelihood phylogenetic tree, we first identify which substition model best fits the data, using the phangorn modelTest function.
+
+```{r , model_test, echo=FALSE}
+set.seed(415874)
+mt <- modelTest(artr, multicore = T, 
+                mc.cores = 8,
+                control = pml.control(trace = 0))#, control = pml.control(trace = 0))
+
+best.model <- arrange(mt,BIC) %>% 
+  slice_head(n = 1)
+
+print(best.model)
+```
+
+### Conducting ML
+
+We then infer a phylogenetic tree using maximum likelihood (ML) and stochastic tree rearrangement to improve resolution of tree topologies.
+
+```{r, fit_model_plot_tree, echo=T, warning=F, message=F}
+fit_mt <- pml_bb(mt, #result of model test
+                 model = "BIC", #use best use best BIC
+                 rearrangement = "stochastic", #perform stochastic tree rearrangement
+                 method = "unrooted", #estimate unrooted tree
+                 control = pml.control(trace = 0))
+
+#generate unrooted phylogeny using the equal angle layout
+p <- ggtree(fit_mt$tree,
+            layout="equal_angle") 
+#join data to the tree element
+p$data <- p$data %>% 
+  left_join(sample_info, by = c("label"="Sample_ID"))
+
+#plot and annotate tree
+p.fitmt <- p +
+  geom_tippoint(aes(color=spp_ssp_code_phylogeny,  # color by spp and ssp
+                    pch=as.factor(ploidy_level)), #shape by ploidy
+                size=3, stroke=1)+ #increase size for better visibility
+  scale_color_manual(values=cols.list.outgrp, #adjust colors
+                     labels=labels.col.outgrp) + #adjust color labels
+  scale_shape_manual(values=shp.list.ploidy)+ #adjust shapes
+  ggexpand(.1, direction=-1)+
+  geom_treescale(offset = -0.005, #provide treescale
+                 offset.label = -0.01, x=-0.01, y=-0.015)+ 
+  labs(shape="Ploidy", col="Species/Subspecies") 
+
+print(p.fitmt)
+ggsave(plot=p.fitmt, "results/figures/ML_Phylogeny.pdf", device = "pdf")
+```
+
+### Perform non-parametric bootstrap analysis 
+
+Finally, we can use the tree and perform a bootstrap analysis to assess node support.
+
+```{r bootstrap_tree, warning=F, message=F, eval=T, fig.height=8, fig.width=12, fig.show="hide"}
+bs <- bootstrap.pml(fit_mt, #input fitted model
+                    bs=100, #nbootstrap replicates
+                    optNni=TRUE, #nearest neighbor optimization
+                    multicore = T, # use multiple cores (8)
+                    mc.cores = 8)
+
+#generate a consensus network
+treeBS <- plotBS(fit_mt$tree,bs,type = "unrooted", digits = 2, plot=F)
+
+BS <- ggtree(treeBS, layout = "equal_angle")
+
+BS$data <- BS$data %>% 
+  left_join(sample_info, by = c("label"="Sample_ID"))
+
+BS_plot <- BS + 
+  geom_tippoint(aes(color=spp_ssp_code_phylogeny, 
+                    pch=as.factor(ploidy_level)), 
+                hjust=-.1, 
+                size=3, stroke=1)+
+  scale_color_manual(values=cols.list.outgrp, 
+                     labels=labels.col.outgrp) +
+  scale_shape_manual(values=shp.list.ploidy)+
+  ggexpand(.1)+
+  labs(shape="Ploidy", col="Species/Subspecies")+
+   geom_nodepoint(aes(subset=as.numeric(label)>0.5, size=as.numeric(label)))+
+  scale_size(range = c(0, 3))+
+  labs(size="Support")
+
+ggsave(plot=BS_plot, "results/figures/BS_Phylogeny.pdf", device = "pdf")
+```
+```{r, fig.height=8, fig.width=12}
+print(BS_plot)
+```
+
