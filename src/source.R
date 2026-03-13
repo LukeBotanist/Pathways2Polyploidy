@@ -41,54 +41,7 @@ labs.list.ploidy <- c("unconfirmed"="unconfirmed",
                       "4"="4x")
 
 
-scale_plot_for_width <- function(p, width_cm = 8.9){
-  
-  base_width <- 8.9
-  s <- width_cm / base_width
-  
-  if (inherits(p, "ggtree")) {
-    
-    p +
-      ggtree::theme_tree() +
-      scale_x_continuous(expand = expansion(mult = c(0,0))) +
-      theme(
-        legend.title = element_text(size = 9 * s),
-        legend.text = element_text(size = 8 * s),
-        legend.key.size = unit(0.5 * s, "cm"),
-        legend.spacing = unit(0.15 * s, "cm"),
-        plot.margin = margin(5,5,5,5),
-        axis.title = element_text(size = 9 * s)
-      )
-    
-    
-  } else {
-    
-    p +
-      theme_classic(base_size = 8 * s) +
-      theme(
-        axis.title = element_text(size = 9 * s),
-        axis.text = element_text(size = 8 * s),
-        legend.title = element_text(size = 9 * s),
-        legend.text = element_text(size = 8 * s),
-        legend.key.size = unit(0.5 * s, "cm"),
-        legend.spacing = unit(0.15 * s, "cm"),
-        plot.margin = margin(5,5,5,5)
-      )
-    
-  }
-}
-
-
-theme_pub <- function(base_size = 8, base_family = "Arial") {
-  theme_classic(base_size = base_size, base_family = base_family) +
-    theme(
-      axis.title = element_text(size = base_size),
-      axis.text  = element_text(size = base_size),
-      legend.title = element_blank(),
-      legend.text = element_text(size = base_size),
-      strip.background = element_blank(),
-      strip.text = element_text(face = "bold"),
-      plot.title = element_text(face = "bold", size = base_size + 1),
-      plot.margin = margin(1,1,1,1)
-    )
-}
+site_coords_triploid <- data.frame(lat=c(43.322, 44.604335, 39.339), 
+                                   lon=c(-115.998, -117.270221, -111.520),
+                                   labs=c("Orchard Common Garden\nID","Big Lookout Mountain\nOR", "Majors Flat\nCommon Garden, UT"),
+                                   elev=c(1686, 1868, 2105))
