@@ -1,7 +1,6 @@
 ---
 title: "Triploid_Map"
 author: "Grossfurthner,L.P.,"
-date: "2026-03-13"
 output:
   html_document:
     toc: yes
@@ -14,7 +13,7 @@ output:
   pdf_document:
     toc: yes
     toc_depth: 3
-
+date: "2026-03-13"
 ---
 
 

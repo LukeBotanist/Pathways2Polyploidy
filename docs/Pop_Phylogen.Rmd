@@ -8,10 +8,10 @@ output:
     keep_md: true
   github_document:
     toc: yes
-    toc_depth: '3'
+    toc_depth: 3
   pdf_document:
     toc: yes
-    toc_depth: '3'
+    toc_depth: 3
 date: "`r Sys.Date()`"
 ---
 

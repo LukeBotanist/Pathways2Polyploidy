@@ -4,6 +4,8 @@ This is the repository that contains data and analysis pipelines for the manuscr
 
 For our manuscript, we used flow cytometry-based genome size estimation, coupled with chromosome counts to estimate ploidy, and ddRAD-seq of cultivated Artemisia tridentata individuals and their close and distant relatives to assess the frequency of auto- and allopolyploidy origins of neo-polyploids.
 
-The analysis of flow cytometric data is located [here](docs/Ploidy_Analyses.md).
-The pipeline for population genetic and phylogenetic analysis can be found [here](docs/Pop_Phylogen.md).
-The pipeline for map generation can be found [here](docs/Triploid_Map.md). # More to come here soon
+The analysis of flow cytometric data is located [here](docs/Ploidy_Analyses.md).<br>
+
+The pipeline for population genetic and phylogenetic analysis can be found [here](docs/Pop_Phylogen.md).<br>
+
+The pipeline for map generation can be found [here](docs/Triploid_Map.md). The map will be further documented and the code polished soon.<br>
