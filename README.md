@@ -6,4 +6,4 @@ For our manuscript, we used flow cytometry-based genome size estimation, coupled
 
 The analysis of flow cytometric data is located [here](docs/Ploidy_Analyses.md).
 The pipeline for population genetic and phylogenetic analysis can be found [here](docs/Pop_Phylogen.md).
-
+The pipeline for map generation can be found [here](docs/Triploid_Map.md). # More to come here soon
