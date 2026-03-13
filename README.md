@@ -9,3 +9,10 @@ The analysis of flow cytometric data is located [here](docs/Ploidy_Analyses.md).
 The pipeline for population genetic and phylogenetic analysis can be found [here](docs/Pop_Phylogen.md).<br>
 
 The pipeline for map generation can be found [here](docs/Triploid_Map.md). The map will be further documented and the code polished soon.<br>
+
+More too come after manuscript acceptance.
+
+
+# Funding statement
+
+Funding was provided by the NSF Idaho EPSCoR Program and by the National Science Foundation under award number OIA-1757324. Additional financial support was provided by the Stillinger Expedition fund, and the USDA Rocky Mountain Research Station.

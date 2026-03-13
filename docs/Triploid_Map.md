@@ -1,26 +1,14 @@
----
-title: "Triploid_Map"
-author: "Grossfurthner,L.P.,"
-output:
-  html_document:
-    toc: yes
-    toc_depth: 3
-    theme: united
-    keep_md: true
-  github_document:
-    toc: yes
-    toc_depth: 3
-  pdf_document:
-    toc: yes
-    toc_depth: 3
-date: "2026-03-13"
----
+Triploid_Map
+================
+Lukas P. Grossfurthner
+2026-03-13
 
-
+- [Triploid Map](#triploid-map)
 
 ## Triploid Map
-This is the code for automatized map generations. More explanations soon.
 
+This is the code for automatized map generations. More explanations
+soon.
 
 ``` r
 #Read file continaing coordinates
@@ -71,13 +59,9 @@ dem <- get_elev_raster(
 )
 ```
 
-```
-## Mosaicing & Projecting
-```
+    ## Mosaicing & Projecting
 
-```
-## Note: Elevation units are in meters.
-```
+    ## Note: Elevation units are in meters.
 
 ``` r
 dem <- rast(dem)
@@ -89,15 +73,11 @@ countries_crop <- st_intersection(
 )
 ```
 
-```
-## although coordinates are longitude/latitude, st_intersection assumes that they
-## are planar
-```
+    ## although coordinates are longitude/latitude, st_intersection assumes that they
+    ## are planar
 
-```
-## Warning: attribute variables are assumed to be spatially constant throughout
-## all geometries
-```
+    ## Warning: attribute variables are assumed to be spatially constant throughout
+    ## all geometries
 
 ``` r
 ## IF water outside of country, extract use everything outside of the country borders.  
@@ -107,15 +87,11 @@ water <- st_difference(
 )
 ```
 
-```
-## although coordinates are longitude/latitude, st_union assumes that they are
-## planar
-```
+    ## although coordinates are longitude/latitude, st_union assumes that they are
+    ## planar
 
-```
-## although coordinates are longitude/latitude, st_difference assumes that they
-## are planar
-```
+    ## although coordinates are longitude/latitude, st_difference assumes that they
+    ## are planar
 
 ``` r
 water_vect <- vect(water)
@@ -124,29 +100,21 @@ water_vect <- vect(water)
 countries_crop <- st_crop(countries, bbox_buf)
 ```
 
-```
-## although coordinates are longitude/latitude, st_intersection assumes that they
-## are planar
-```
+    ## although coordinates are longitude/latitude, st_intersection assumes that they
+    ## are planar
 
-```
-## Warning: attribute variables are assumed to be spatially constant throughout
-## all geometries
-```
+    ## Warning: attribute variables are assumed to be spatially constant throughout
+    ## all geometries
 
 ``` r
 us_states_crop <- st_crop(us_states, bbox_buf)
 ```
 
-```
-## although coordinates are longitude/latitude, st_intersection assumes that they
-## are planar
-```
+    ## although coordinates are longitude/latitude, st_intersection assumes that they
+    ## are planar
 
-```
-## Warning: attribute variables are assumed to be spatially constant throughout
-## all geometries
-```
+    ## Warning: attribute variables are assumed to be spatially constant throughout
+    ## all geometries
 
 ``` r
 dem_df <- as.data.frame(dem, xy = TRUE, na.rm = TRUE)
@@ -159,15 +127,11 @@ land <- countries |>
   st_crop(bbox_buf)
 ```
 
-```
-## although coordinates are longitude/latitude, st_union assumes that they are
-## planar
-```
+    ## although coordinates are longitude/latitude, st_union assumes that they are
+    ## planar
 
-```
-## although coordinates are longitude/latitude, st_intersection assumes that they
-## are planar
-```
+    ## although coordinates are longitude/latitude, st_intersection assumes that they
+    ## are planar
 
 ``` r
 land_vect <- vect(land)
@@ -230,10 +194,8 @@ basemap <- ggplot() +
           color = "black")
 ```
 
-```
-## Coordinate system already present.
-## ℹ Adding new coordinate system, which will replace the existing one.
-```
+    ## Coordinate system already present.
+    ## ℹ Adding new coordinate system, which will replace the existing one.
 
 ``` r
 ###customiuze
@@ -282,94 +244,77 @@ custom_map <- basemap+
 ggsave(plot=custom_map, "results/figures/final_map.pdf",device = "pdf", height = 8, width=8 )
 ```
 
-```
-## Scale on map varies by more than 10%, scale bar may be inaccurate
-```
+    ## Scale on map varies by more than 10%, scale bar may be inaccurate
 
 ``` r
 print(custom_map)
 ```
 
-```
-## Scale on map varies by more than 10%, scale bar may be inaccurate
-```
+    ## Scale on map varies by more than 10%, scale bar may be inaccurate
 
-![](Triploid_Map_files/figure-html/generating_map-1.png)<!-- -->
-
-
-
+![](Triploid_Map_files/figure-gfm/generating_map-1.png)<!-- -->
 
 ``` r
 sessionInfo()
 ```
 
-```
-## R version 4.5.2 (2025-10-31)
-## Platform: aarch64-apple-darwin20
-## Running under: macOS Tahoe 26.3.1
-## 
-## Matrix products: default
-## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
-## 
-## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-## 
-## time zone: Europe/Vienna
-## tzcode source: internal
-## 
-## attached base packages:
-## [1] grid      stats     graphics  grDevices utils     datasets  methods  
-## [8] base     
-## 
-## other attached packages:
-##  [1] ggrepel_0.9.7           rnaturalearthdata_1.0.0 rnaturalearth_1.2.0    
-##  [4] osmdata_0.3.0           tidyterra_1.0.0         scales_1.4.0           
-##  [7] readxl_1.4.5            zoo_1.8-15              viridis_0.6.5          
-## [10] viridisLite_0.4.3       lubridate_1.9.5         forcats_1.0.1          
-## [13] stringr_1.6.0           dplyr_1.2.0             purrr_1.2.1            
-## [16] readr_2.2.0             tidyr_1.3.2             tibble_3.3.1           
-## [19] ggplot2_4.0.2           tidyverse_2.0.0         raster_3.6-32          
-## [22] sp_2.2-1                sf_1.1-0                terra_1.9-1            
-## [25] lwgeom_0.2-15           mapdata_2.3.1           maps_3.4.3             
-## [28] gridExtra_2.3           gtable_0.3.6            ggnewscale_0.5.2       
-## [31] ggspatial_1.1.10        geosphere_1.6-5         elevatr_0.99.1         
-## [34] data.table_1.18.2.1    
-## 
-## loaded via a namespace (and not attached):
-##  [1] tidyselect_1.2.1              farver_2.1.2                 
-##  [3] S7_0.2.1                      fastmap_1.2.0                
-##  [5] digest_0.6.39                 timechange_0.4.0             
-##  [7] lifecycle_1.0.5               magrittr_2.0.4               
-##  [9] compiler_4.5.2                rlang_1.1.7                  
-## [11] sass_0.4.10                   progress_1.2.3               
-## [13] tools_4.5.2                   yaml_2.3.12                  
-## [15] knitr_1.51                    labeling_0.4.3               
-## [17] prettyunits_1.2.0             classInt_0.4-11              
-## [19] curl_7.0.0                    RColorBrewer_1.1-3           
-## [21] KernSmooth_2.23-26            withr_3.0.2                  
-## [23] e1071_1.7-17                  progressr_0.18.0             
-## [25] cli_3.6.5                     crayon_1.5.3                 
-## [27] rmarkdown_2.30                ragg_1.5.1                   
-## [29] generics_0.1.4                otel_0.2.0                   
-## [31] rstudioapi_0.18.0             httr_1.4.8                   
-## [33] tzdb_0.5.0                    DBI_1.3.0                    
-## [35] cachem_1.1.0                  proxy_0.4-29                 
-## [37] slippymath_0.3.1              cellranger_1.1.0             
-## [39] vctrs_0.7.1                   jsonlite_2.0.0               
-## [41] hms_1.1.4                     systemfonts_1.3.2            
-## [43] jquerylib_0.1.4               units_1.0-0                  
-## [45] rnaturalearthhires_1.0.0.9000 glue_1.8.0                   
-## [47] codetools_0.2-20              stringi_1.8.7                
-## [49] pillar_1.11.1                 htmltools_0.5.9              
-## [51] R6_2.6.1                      textshaping_1.0.5            
-## [53] evaluate_1.0.5                lattice_0.22-9               
-## [55] bslib_0.10.0                  class_7.3-23                 
-## [57] Rcpp_1.1.1                    xfun_0.56                    
-## [59] pkgconfig_2.0.3
-```
-
-
-
-
-
+    ## R version 4.5.2 (2025-10-31)
+    ## Platform: aarch64-apple-darwin20
+    ## Running under: macOS Tahoe 26.3.1
+    ## 
+    ## Matrix products: default
+    ## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+    ## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+    ## 
+    ## locale:
+    ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+    ## 
+    ## time zone: Europe/Vienna
+    ## tzcode source: internal
+    ## 
+    ## attached base packages:
+    ## [1] grid      stats     graphics  grDevices utils     datasets  methods  
+    ## [8] base     
+    ## 
+    ## other attached packages:
+    ##  [1] ggrepel_0.9.7           rnaturalearthdata_1.0.0 rnaturalearth_1.2.0    
+    ##  [4] osmdata_0.3.0           tidyterra_1.0.0         scales_1.4.0           
+    ##  [7] readxl_1.4.5            zoo_1.8-15              viridis_0.6.5          
+    ## [10] viridisLite_0.4.3       lubridate_1.9.5         forcats_1.0.1          
+    ## [13] stringr_1.6.0           dplyr_1.2.0             purrr_1.2.1            
+    ## [16] readr_2.2.0             tidyr_1.3.2             tibble_3.3.1           
+    ## [19] ggplot2_4.0.2           tidyverse_2.0.0         raster_3.6-32          
+    ## [22] sp_2.2-1                sf_1.1-0                terra_1.9-1            
+    ## [25] lwgeom_0.2-15           mapdata_2.3.1           maps_3.4.3             
+    ## [28] gridExtra_2.3           gtable_0.3.6            ggnewscale_0.5.2       
+    ## [31] ggspatial_1.1.10        geosphere_1.6-5         elevatr_0.99.1         
+    ## [34] data.table_1.18.2.1    
+    ## 
+    ## loaded via a namespace (and not attached):
+    ##  [1] tidyselect_1.2.1              farver_2.1.2                 
+    ##  [3] S7_0.2.1                      fastmap_1.2.0                
+    ##  [5] digest_0.6.39                 timechange_0.4.0             
+    ##  [7] lifecycle_1.0.5               magrittr_2.0.4               
+    ##  [9] compiler_4.5.2                rlang_1.1.7                  
+    ## [11] progress_1.2.3                tools_4.5.2                  
+    ## [13] yaml_2.3.12                   knitr_1.51                   
+    ## [15] labeling_0.4.3                prettyunits_1.2.0            
+    ## [17] classInt_0.4-11               curl_7.0.0                   
+    ## [19] RColorBrewer_1.1-3            KernSmooth_2.23-26           
+    ## [21] withr_3.0.2                   e1071_1.7-17                 
+    ## [23] progressr_0.18.0              cli_3.6.5                    
+    ## [25] rmarkdown_2.30                crayon_1.5.3                 
+    ## [27] ragg_1.5.1                    generics_0.1.4               
+    ## [29] otel_0.2.0                    rstudioapi_0.18.0            
+    ## [31] httr_1.4.8                    tzdb_0.5.0                   
+    ## [33] DBI_1.3.0                     proxy_0.4-29                 
+    ## [35] slippymath_0.3.1              cellranger_1.1.0             
+    ## [37] vctrs_0.7.1                   hms_1.1.4                    
+    ## [39] systemfonts_1.3.2             units_1.0-0                  
+    ## [41] rnaturalearthhires_1.0.0.9000 glue_1.8.0                   
+    ## [43] codetools_0.2-20              stringi_1.8.7                
+    ## [45] pillar_1.11.1                 htmltools_0.5.9              
+    ## [47] R6_2.6.1                      textshaping_1.0.5            
+    ## [49] evaluate_1.0.5                lattice_0.22-9               
+    ## [51] class_7.3-23                  Rcpp_1.1.1                   
+    ## [53] xfun_0.56                     pkgconfig_2.0.3

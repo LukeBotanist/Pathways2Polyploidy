@@ -1,18 +1,18 @@
 ---
 title: "Triploid_Map"
-author: "Grossfurthner,L.P.,"
+author: "Lukas P. Grossfurthner"
 output:
-  html_document:
-    toc: yes
-    toc_depth: 3
-    theme: united
-    keep_md: true
   github_document:
     toc: yes
     toc_depth: 3
   pdf_document:
     toc: yes
     toc_depth: 3
+  html_document:
+    toc: yes
+    toc_depth: 3
+    theme: united
+    keep_md: true
 date: "`r Sys.Date()`"
 ---
 

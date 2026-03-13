@@ -1,17 +1,18 @@
 ---
 title: "Population_Phylogenetic_Analysis"
+author: "Lukas P. Grossfurthner"
 output:
-  html_document:
-    toc: yes
-    toc_depth: 3
-    theme: united
-    keep_md: true
   github_document:
     toc: yes
     toc_depth: 3
   pdf_document:
     toc: yes
     toc_depth: 3
+  html_document:
+    toc: yes
+    toc_depth: 3
+    theme: united
+    keep_md: true
 date: "`r Sys.Date()`"
 ---
 
