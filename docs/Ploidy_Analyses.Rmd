@@ -4,10 +4,10 @@ author: "Lukas P. Grossfurthner"
 output:
   github_document:
     toc: yes
-    toc_depth: '3'
+    toc_depth: 3
   pdf_document:
     toc: yes
-    toc_depth: '3'
+    toc_depth: 3
   html_document:
     toc: yes
     toc_depth: 3
@@ -40,7 +40,7 @@ field_data <- read_xlsx("../triploid/greenhouse_samples/data/Atri_field_ploidy.x
 ## Estimate genome sizes based on DAPI of samples and combine data sets
 
 
-```{r pressure, echo=FALSE}
+```{r read_and_manipulate_data, echo=FALSE}
 Oregon_1 <- field_data %>% group_by(Sample) %>% 
   mutate(C2_value_Acne=Sample_mean/Std_mean*(genome_size_std*2)) %>% 
   select(Sample, C2_value_Acne) %>% 
@@ -63,7 +63,7 @@ ploidies_combined <- bind_rows(Oregon_1, Greenhouse)
 
 
 
-```{r}
+```{r ploidy_plot}
 ploidy_plot <- ploidies_combined %>%
   mutate(origin=ifelse(grepl("Oregon",Site), "Field Samples", "Common Garden"),
          Sample_ID.1=ifelse(!grepl("O1", Sample_ID),
@@ -92,7 +92,7 @@ ggsave(plot=ploidy_plot, "results/figures/ploidy_plot.pdf", device = "pdf", heig
 
 
 
-```{r}
+```{r genome_size_plot}
 triploid_offspring_PI.summary <- triploid_offspring_PI %>% 
   filter(grepl("Acru_AS", Std)) %>% 
   group_by(Sample) %>% 
@@ -104,7 +104,7 @@ write.csv(x=triploid_offspring_PI.summary, "results/tables/genome_sizes_offsprin
 
 Plot with common garden samples
 
-```{r}
+```{r genome_sizeplot_all}
 tri_plot <- triploid_offspring_PI %>% 
   filter(!grepl("Acne",Std),
        Std=="Acru_AS") %>% 
@@ -129,7 +129,7 @@ ggsave(plot=tri_plot, "results/figures/tri_plot.pdf", device = "pdf", height = 8
 
 For the manuscript, we decided to use only the field offspring for the main figure. 
 
-```{r}
+```{r genome_size_plot_fieldsample}
 tri_plot_wocg <- triploid_offspring_PI %>% 
   filter(!grepl("Acne",Std),
        Std=="Acru_AS") %>% 
@@ -151,6 +151,9 @@ print(tri_plot_wocg)
 ggsave(plot=tri_plot_wocg, "results/figures/tri_plot_wocg.pdf", device = "pdf", height = 6, width=6)
 ```
 
+```{r}
+sessionInfo()
+```
 
 
 

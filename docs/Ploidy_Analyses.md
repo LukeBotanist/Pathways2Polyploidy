@@ -48,7 +48,7 @@ ploidy_plot <- ploidies_combined %>%
 print(ploidy_plot)
 ```
 
-![](Ploidy_Analyses_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](Ploidy_Analyses_files/figure-gfm/ploidy_plot-1.png)<!-- -->
 
 ``` r
 ggsave(plot=ploidy_plot, "results/figures/ploidy_plot.pdf", device = "pdf", height = 89, width=89, units = "mm")
@@ -102,7 +102,7 @@ tri_plot <- triploid_offspring_PI %>%
 print(tri_plot)
 ```
 
-![](Ploidy_Analyses_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](Ploidy_Analyses_files/figure-gfm/genome_sizeplot_all-1.png)<!-- -->
 
 ``` r
 ggsave(plot=tri_plot, "results/figures/tri_plot.pdf", device = "pdf", height = 8, width=8)
@@ -132,8 +132,47 @@ tri_plot_wocg <- triploid_offspring_PI %>%
 print(tri_plot_wocg)
 ```
 
-![](Ploidy_Analyses_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](Ploidy_Analyses_files/figure-gfm/genome_size_plot_fieldsample-1.png)<!-- -->
 
 ``` r
 ggsave(plot=tri_plot_wocg, "results/figures/tri_plot_wocg.pdf", device = "pdf", height = 6, width=6)
 ```
+
+``` r
+sessionInfo()
+```
+
+    ## R version 4.5.2 (2025-10-31)
+    ## Platform: aarch64-apple-darwin20
+    ## Running under: macOS Tahoe 26.3.1
+    ## 
+    ## Matrix products: default
+    ## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+    ## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+    ## 
+    ## locale:
+    ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+    ## 
+    ## time zone: Europe/Vienna
+    ## tzcode source: internal
+    ## 
+    ## attached base packages:
+    ## [1] stats     graphics  grDevices utils     datasets  methods   base     
+    ## 
+    ## other attached packages:
+    ##  [1] ggrepel_0.9.7   readxl_1.4.5    lubridate_1.9.5 forcats_1.0.1  
+    ##  [5] stringr_1.6.0   dplyr_1.2.0     purrr_1.2.1     readr_2.2.0    
+    ##  [9] tidyr_1.3.2     tibble_3.3.1    ggplot2_4.0.2   tidyverse_2.0.0
+    ## 
+    ## loaded via a namespace (and not attached):
+    ##  [1] gtable_0.3.6       compiler_4.5.2     Rcpp_1.1.1         tidyselect_1.2.1  
+    ##  [5] textshaping_1.0.5  systemfonts_1.3.2  scales_1.4.0       yaml_2.3.12       
+    ##  [9] fastmap_1.2.0      R6_2.6.1           labeling_0.4.3     generics_0.1.4    
+    ## [13] knitr_1.51         pillar_1.11.1      RColorBrewer_1.1-3 tzdb_0.5.0        
+    ## [17] rlang_1.1.7        utf8_1.2.6         stringi_1.8.7      xfun_0.56         
+    ## [21] S7_0.2.1           otel_0.2.0         timechange_0.4.0   cli_3.6.5         
+    ## [25] withr_3.0.2        magrittr_2.0.4     digest_0.6.39      grid_4.5.2        
+    ## [29] rstudioapi_0.18.0  hms_1.1.4          lifecycle_1.0.5    vctrs_0.7.1       
+    ## [33] evaluate_1.0.5     glue_1.8.0         cellranger_1.1.0   farver_2.1.2      
+    ## [37] ragg_1.5.1         rmarkdown_2.30     tools_4.5.2        pkgconfig_2.0.3   
+    ## [41] htmltools_0.5.9

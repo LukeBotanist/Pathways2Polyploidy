@@ -115,7 +115,7 @@ PC12 <- ggplot(pca.data.comb, aes(x=Axis1,
 print(PC12)
 ```
 
-![](Pop_Phylogen_files/figure-html/plot pca-1.png)<!-- -->
+![](Pop_Phylogen_files/figure-html/plot_pca-1.png)<!-- -->
 
 ``` r
 ggsave(plot=PC12, "results/figures/PC12.pdf", device = "pdf", height = 6, width=8)
@@ -154,7 +154,10 @@ splitnet_plot <- splitnet +
   theme_void(base_size=15)
 
 ggsave(plot=splitnet_plot, "results/figures/Splitnet.pdf", device = "pdf", height = 6, width=8)
+print(splitnet_plot)
 ```
+
+![](Pop_Phylogen_files/figure-html/calculate_splitnet-1.png)<!-- -->
 
 ### Maximum Likelihood Analysis
 #### Model Testing
@@ -257,4 +260,76 @@ print(BS_plot)
 ```
 
 ![](Pop_Phylogen_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+
+
+``` r
+sessionInfo()
+```
+
+```
+## R version 4.5.2 (2025-10-31)
+## Platform: aarch64-apple-darwin20
+## Running under: macOS Tahoe 26.3.1
+## 
+## Matrix products: default
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: Europe/Vienna
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] grid      stats     graphics  grDevices utils     datasets  methods  
+## [8] base     
+## 
+## other attached packages:
+##  [1] vcfR_1.16.0     lubridate_1.9.5 forcats_1.0.1   stringr_1.6.0  
+##  [5] dplyr_1.2.0     readr_2.2.0     tidyr_1.3.2     tibble_3.3.1   
+##  [9] tidyverse_2.0.0 tidytree_0.4.7  tanggle_1.16.0  readxl_1.4.5   
+## [13] purrr_1.2.1     phytools_2.5-2  maps_3.4.3      phangorn_2.12.1
+## [17] patchwork_1.3.2 ggtree_4.0.4    ggrepel_0.9.7   gridExtra_2.3  
+## [21] ggpubr_0.6.3    ggplot2_4.0.2   ape_5.8-1       adegenet_2.1.11
+## [25] ade4_1.7-23    
+## 
+## loaded via a namespace (and not attached):
+##   [1] mnormt_2.1.2            permute_0.9-10          rlang_1.1.7            
+##   [4] magrittr_2.0.4          otel_0.2.0              compiler_4.5.2         
+##   [7] mgcv_1.9-4              systemfonts_1.3.2       vctrs_0.7.1            
+##  [10] reshape2_1.4.5          combinat_0.0-8          quadprog_1.5-8         
+##  [13] memuse_4.2-3            pkgconfig_2.0.3         fastmap_1.2.0          
+##  [16] backports_1.5.0         labeling_0.4.3          promises_1.5.0         
+##  [19] rmarkdown_2.30          tzdb_0.5.0              ragg_1.5.1             
+##  [22] xfun_0.56               cachem_1.1.0            seqinr_4.2-36          
+##  [25] aplot_0.2.9             clusterGeneration_1.3.8 jsonlite_2.0.0         
+##  [28] later_1.4.8             broom_1.0.12            parallel_4.5.2         
+##  [31] cluster_2.1.8.2         R6_2.6.1                bslib_0.10.0           
+##  [34] stringi_1.8.7           RColorBrewer_1.1-3      car_3.1-5              
+##  [37] cellranger_1.1.0        numDeriv_2016.8-1.1     jquerylib_0.1.4        
+##  [40] Rcpp_1.1.1              iterators_1.0.14        knitr_1.51             
+##  [43] optimParallel_1.0-2     timechange_0.4.0        httpuv_1.6.16          
+##  [46] Matrix_1.7-4            splines_4.5.2           igraph_2.2.2           
+##  [49] tidyselect_1.2.1        rstudioapi_0.18.0       abind_1.4-8            
+##  [52] yaml_2.3.12             vegan_2.7-3             doParallel_1.0.17      
+##  [55] codetools_0.2-20        lattice_0.22-9          plyr_1.8.9             
+##  [58] shiny_1.13.0            treeio_1.34.0           withr_3.0.2            
+##  [61] S7_0.2.1                coda_0.19-4.1           evaluate_1.0.5         
+##  [64] pinfsc50_1.3.0          gridGraphics_0.5-1      pillar_1.11.1          
+##  [67] carData_3.0-6           foreach_1.5.2           ggfun_0.2.0            
+##  [70] generics_0.1.4          hms_1.1.4               scales_1.4.0           
+##  [73] xtable_1.8-8            glue_1.8.0              gdtools_0.5.0          
+##  [76] scatterplot3d_0.3-45    lazyeval_0.2.2          tools_4.5.2            
+##  [79] ggsignif_0.6.4          ggiraph_0.9.6           fs_1.6.7               
+##  [82] fastmatch_1.1-8         colorspace_2.1-2        nlme_3.1-168           
+##  [85] Formula_1.2-5           cli_3.6.5               rappdirs_0.3.4         
+##  [88] DEoptim_2.2-8           textshaping_1.0.5       fontBitstreamVera_0.1.1
+##  [91] expm_1.0-0              viridisLite_0.4.3       gtable_0.3.6           
+##  [94] rstatix_0.7.3           yulab.utils_0.2.4       sass_0.4.10            
+##  [97] digest_0.6.39           fontquiver_0.2.1        ggplotify_0.1.3        
+## [100] htmlwidgets_1.6.4       farver_2.1.2            htmltools_0.5.9        
+## [103] lifecycle_1.0.5         mime_0.13               fontLiberation_0.1.0   
+## [106] MASS_7.3-65
+```
 

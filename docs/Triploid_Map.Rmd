@@ -10,10 +10,10 @@ output:
     keep_md: true
   github_document:
     toc: yes
-    toc_depth: '3'
+    toc_depth: 3
   pdf_document:
     toc: yes
-    toc_depth: '3'
+    toc_depth: 3
 
 ---
 
@@ -69,7 +69,7 @@ source("src/source.R")
 ## Triploid Map
 This is the code for automatized map generations. More explanations soon.
 
-```{r generating map}
+```{r generating_map, fig.height=10, fig.width=10}
 
 #Read file continaing coordinates
 data <- read_excel("data/tables/Supplementary_Table.xlsx",sheet=2)
@@ -210,7 +210,7 @@ custom_map <- basemap+
           aes(fill= spp_ssp_code_phylogeny), 
           color="black",
           pch=21, 
-          size=2)+
+          size=4)+
   scale_fill_manual(values=cols.list.outgrp, labels=labels.col.outgrp, name="Species/Subspecies")+
   geom_point(data=site_coords_triploid, 
              aes(x=lon,
@@ -230,7 +230,7 @@ custom_map <- basemap+
     location = "bl",
     style="ticks",
     pad_x = unit(0.7, "cm"), #0.2
-    pad_y = unit(1.3, "cm"),
+    pad_y = unit(1, "cm"),
     width_hint=0.2, 
     line_width = 1.8, 
     text_cex = 0.75
@@ -238,12 +238,24 @@ custom_map <- basemap+
   annotation_north_arrow(location = "bl", 
                          which_north = "true",
                          style = north_arrow_nautical,#north_arrow_minimal,
-                         pad_y = unit(1.7, "cm"),
+                         pad_y = unit(1.4, "cm"),
                          pad_x = unit(1.5, "cm"),
                          height = unit(2, "cm"),
                          width = unit(2, "cm")
-  )
+  )+
+  labs(x="Longitude", y="Latitude")
 
 ggsave(plot=custom_map, "results/figures/final_map.pdf",device = "pdf", height = 8, width=8 )
 print(custom_map)
 ```
+
+
+
+```{r}
+sessionInfo()
+```
+
+
+
+
+

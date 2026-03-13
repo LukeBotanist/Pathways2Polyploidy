@@ -41,7 +41,7 @@ source("src/source.R")
 
 For the principal component analysis, we only use the 36 samples of A. tridentata subspecies (i.e. only ingroup). 
 
-```{r, read vcf}
+```{r, read_vcf}
 
 ingroup <- read.vcfR("data/vcf/ingrpR80miss15maf003DP5.recode.vcf") # read vcf file
 ```
@@ -50,7 +50,7 @@ We can confirm that our samples contains the ingroup samples (`r dim(ingroup@gt)
 
 We can then read the data passport data (i.e. Table S1), recode (factor) and reorder (levels) the species/subspecies codes. 
 
-```{r, recode metadata}
+```{r, recode_metadata}
 sample_info <- read_excel("data/tables/Supplementary_Table.xlsx", sheet=2) #read sample info file; sheet2==passport data
 
 #recode chr to fct and reorder levels for plotting 
@@ -63,7 +63,7 @@ sample_info <- sample_info %>%
 
 Once this tidying step is complete, we can convert the vcf to genind which contains individual genotypes and is stored in a matrix. We can use this and impute missing values by the mean of the allele frequencies, which subsequently serves as input for the PCA.
 
-```{r, calculate pca}
+```{r, calculate_pca}
 x <- vcfR2genind(ingroup) # convert vcf to genind format
 x.tab <- tab(x, freq=TRUE, NA.method="mean") #access allele frequencies
 
@@ -79,7 +79,7 @@ ex_var <- x.pca$eig/sum(x.pca$eig)*100 #calcualte explained variance in percent
 
 Finally, we can plot and customize the PCA. 
 
-```{r, plot pca, fig.height=8, fig.width=8}
+```{r, plot_pca, fig.height=8, fig.width=8}
 
 pca_data <- pca_data %>%
   rownames_to_column(var="Sample_ID")
@@ -135,7 +135,7 @@ Among the first things to calculate is a phylogenetic network, that, in short, i
 points where the data have conflicting signals. 
 To construct a phylogenetic network, we utilize the function dist.ml of phangorn to calculate pairwise distances and then construct the network using neighbotNet, that implements the method of Bryant and Moulton (2004). For plotting, we can use the `tanggle` package by Schliep et al. 2018.
 
-```{r ,calculate splitnet, echo=T, fig.height=8, fig.width=12}
+```{r ,calculate_splitnet, echo=T, fig.height=8, fig.width=12}
 dm <- dist.ml(artr)
 sb.nnet <- neighborNet(dm)
 splitnet <- ggsplitnet(sb.nnet)
@@ -152,6 +152,7 @@ splitnet_plot <- splitnet +
   theme_void(base_size=15)
 
 ggsave(plot=splitnet_plot, "results/figures/Splitnet.pdf", device = "pdf", height = 6, width=8)
+print(splitnet_plot)
 
 ```
 
@@ -244,5 +245,9 @@ ggsave(plot=BS_plot, "results/figures/BS_Phylogeny.pdf", device = "pdf")
 ```
 ```{r, fig.height=8, fig.width=12}
 print(BS_plot)
+```
+
+```{r}
+sessionInfo()
 ```
 
