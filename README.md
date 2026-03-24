@@ -10,6 +10,8 @@ The pipeline for population genetic and phylogenetic analysis can be found [here
 
 The pipeline for map generation can be found [here](docs/Triploid_Map.md). The map will be further documented and the code polished soon.<br>
 
+Images of the offspring of the triploid field sample including image location and date can be found[here](docs/Triploid_Progeny_Images.md).<br>
+
 More too come after manuscript acceptance.
 
 

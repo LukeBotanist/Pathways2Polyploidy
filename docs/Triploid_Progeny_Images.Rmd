@@ -1,0 +1,93 @@
+---
+title: "Triploid_Progeny_Images"
+author: "Grossfurthner,L.P.,"
+date: "`r Sys.Date()`"
+output:
+  github_document:
+    toc: yes
+    toc_depth: 3
+  pdf_document:
+    toc: yes
+    toc_depth: 3
+  html_document:
+    toc: yes
+    toc_depth: 3
+    theme: united
+    keep_md: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(exifr)
+library(tidyverse)
+library(magick)
+library(tidygeocoder)
+```
+
+
+## Grown Plants
+
+```{r, list_img}
+images <- list.files("images/original", full.names = T)
+```
+
+```{r}
+outpath <- "images/reduced_size"
+dir.create(outpath, recursive = T)
+```
+
+
+
+```{r, results="asis", message=F, warning=F}
+for (i in 1:length(images)) {
+  metadata <- read_exif(images[i])
+  metadata <- metadata %>% mutate(DateTimeOriginal=as.POSIXct(DateTimeOriginal, 
+                                     format = "%Y:%m:%d %H:%M:%S", 
+                                     tz = "UTC"))
+  
+
+  data <- data.frame(file = str_remove_all(basename(metadata$SourceFile), ".jpeg"),
+                     date_reformat=format(metadata$DateTimeOriginal, "%d %b %Y"),
+                     tz=metadata$OffsetTimeOriginal,
+                     lat=metadata$GPSLatitude,
+                     lon=metadata$GPSLongitude)
+  
+  location_full <- reverse_geocode(.tbl = data,
+  lat = lat,
+  long = lon,
+  method = "osm")
+  
+  location <- data.frame(str_split(location_full$address, 
+                      pattern=",",
+                      simplify = T, 
+                      ))[c(3,5,7)] %>% paste(., collapse = ",") %>% 
+  trimws(which="both")
+  
+  
+  caption <- paste0(
+    data$file, " | ",
+    location," | ",
+    data$date_reformat)
+  
+  img <- image_read(images[i])
+  img_scaled <- image_scale(img, "80%")  
+  img_scaled_strp <- image_strip(img_scaled)
+
+  
+  reduced_size <- file.path(outpath, basename(images[i]))
+  
+  image_write(
+    img_scaled_strp,
+    path = reduced_size,
+    quality = 75)
+  
+  cat("![", caption, "](../", reduced_size, ")\n\n", sep = "")
+}
+
+```
+
+
+
+
+
+
